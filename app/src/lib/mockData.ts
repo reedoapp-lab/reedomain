@@ -1,0 +1,368 @@
+import type { 
+  User, Provider, ServiceCategory, Booking, Review, 
+  Message, Notification
+} from '@/types';
+
+// Service Categories
+export const serviceCategories: ServiceCategory[] = [
+  { id: 'cleaning', nameKey: 'services.cleaning', icon: 'Sparkles', descriptionKey: 'services.cleaningDesc' },
+  { id: 'plumbing', nameKey: 'services.plumbing', icon: 'Wrench', descriptionKey: 'services.plumbingDesc' },
+  { id: 'electrical', nameKey: 'services.electrical', icon: 'Zap', descriptionKey: 'services.electricalDesc' },
+  { id: 'it_support', nameKey: 'services.itSupport', icon: 'Monitor', descriptionKey: 'services.itSupportDesc' },
+  { id: 'gardening', nameKey: 'services.gardening', icon: 'Flower2', descriptionKey: 'services.gardeningDesc' },
+  { id: 'painting', nameKey: 'services.painting', icon: 'Paintbrush', descriptionKey: 'services.paintingDesc' },
+  { id: 'moving', nameKey: 'services.moving', icon: 'Truck', descriptionKey: 'services.movingDesc' },
+  { id: 'appliance_repair', nameKey: 'services.applianceRepair', icon: 'Settings', descriptionKey: 'services.applianceRepairDesc' },
+];
+
+// Mock Users
+export const mockUsers: User[] = [
+  {
+    id: '1',
+    email: 'anna.kowalska@example.com',
+    firstName: 'Anna',
+    lastName: 'Kowalska',
+    avatar: '/images/avatars/avatar-1.jpg',
+    role: 'customer',
+    phone: '+48 123 456 789',
+    createdAt: new Date('2024-01-15'),
+    updatedAt: new Date('2024-01-15'),
+  },
+  {
+    id: '2',
+    email: 'marek.nowak@example.com',
+    firstName: 'Marek',
+    lastName: 'Nowak',
+    avatar: '/images/avatars/avatar-2.jpg',
+    role: 'provider',
+    phone: '+48 987 654 321',
+    createdAt: new Date('2024-01-10'),
+    updatedAt: new Date('2024-01-10'),
+  },
+  {
+    id: '3',
+    email: 'katarzyna.wisniewska@example.com',
+    firstName: 'Katarzyna',
+    lastName: 'Wiśniewska',
+    avatar: '/images/avatars/avatar-4.jpg',
+    role: 'provider',
+    phone: '+48 555 666 777',
+    createdAt: new Date('2024-02-01'),
+    updatedAt: new Date('2024-02-01'),
+  },
+  {
+    id: '4',
+    email: 'piotr.dabrowski@example.com',
+    firstName: 'Piotr',
+    lastName: 'Dąbrowski',
+    avatar: '/images/avatars/avatar-3.jpg',
+    role: 'provider',
+    phone: '+48 444 333 222',
+    createdAt: new Date('2024-01-20'),
+    updatedAt: new Date('2024-01-20'),
+  },
+  {
+    id: '5',
+    email: 'admin@reedo.pl',
+    firstName: 'Admin',
+    lastName: 'Reedo',
+    role: 'admin',
+    createdAt: new Date('2023-12-01'),
+    updatedAt: new Date('2023-12-01'),
+  },
+];
+
+// Mock Providers
+export const mockProviders: Provider[] = [
+  {
+    id: '1',
+    userId: '2',
+    user: mockUsers[1],
+    bio: 'Professional plumber with 10+ years of experience. Fast, reliable, and always on time. Specializing in emergency repairs and bathroom renovations.',
+    services: ['plumbing', 'appliance_repair'],
+    pricing: [
+      { serviceType: 'plumbing', basePrice: 150, unit: 'hour' },
+      { serviceType: 'appliance_repair', basePrice: 120, unit: 'hour' },
+    ],
+    location: {
+      address: 'ul. Marszałkowska 100',
+      city: 'Warszawa',
+      postalCode: '00-624',
+      latitude: 52.2297,
+      longitude: 21.0122,
+    },
+    rating: 4.8,
+    reviewCount: 127,
+    isVerified: true,
+    verificationStatus: 'approved',
+    photos: ['/images/services/plumbing-1.jpg', '/images/services/plumbing-2.jpg'],
+    documents: [],
+    availability: [
+      { dayOfWeek: 1, startTime: '08:00', endTime: '18:00' },
+      { dayOfWeek: 2, startTime: '08:00', endTime: '18:00' },
+      { dayOfWeek: 3, startTime: '08:00', endTime: '18:00' },
+      { dayOfWeek: 4, startTime: '08:00', endTime: '18:00' },
+      { dayOfWeek: 5, startTime: '08:00', endTime: '16:00' },
+    ],
+    createdAt: new Date('2024-01-10'),
+  },
+  {
+    id: '2',
+    userId: '3',
+    user: mockUsers[2],
+    bio: 'Certified cleaning professional. I use eco-friendly products and pay attention to every detail. Your satisfaction is guaranteed!',
+    services: ['cleaning'],
+    pricing: [
+      { serviceType: 'cleaning', basePrice: 80, unit: 'hour' },
+    ],
+    location: {
+      address: 'ul. Floriańska 15',
+      city: 'Kraków',
+      postalCode: '31-019',
+      latitude: 50.0647,
+      longitude: 19.945,
+    },
+    rating: 4.9,
+    reviewCount: 89,
+    isVerified: true,
+    verificationStatus: 'approved',
+    photos: ['/images/services/cleaning-1.jpg'],
+    documents: [],
+    availability: [
+      { dayOfWeek: 1, startTime: '07:00', endTime: '19:00' },
+      { dayOfWeek: 2, startTime: '07:00', endTime: '19:00' },
+      { dayOfWeek: 3, startTime: '07:00', endTime: '19:00' },
+      { dayOfWeek: 4, startTime: '07:00', endTime: '19:00' },
+      { dayOfWeek: 5, startTime: '07:00', endTime: '19:00' },
+    ],
+    createdAt: new Date('2024-02-01'),
+  },
+  {
+    id: '3',
+    userId: '4',
+    user: mockUsers[3],
+    bio: 'IT specialist with expertise in home networks, computer repairs, and smart home setup. Patient and customer-focused approach.',
+    services: ['it_support', 'electrical'],
+    pricing: [
+      { serviceType: 'it_support', basePrice: 100, unit: 'hour' },
+      { serviceType: 'electrical', basePrice: 130, unit: 'hour' },
+    ],
+    location: {
+      address: 'ul. Piotrkowska 120',
+      city: 'Łódź',
+      postalCode: '90-006',
+      latitude: 51.7592,
+      longitude: 19.456,
+    },
+    rating: 4.7,
+    reviewCount: 56,
+    isVerified: true,
+    verificationStatus: 'approved',
+    photos: [],
+    documents: [],
+    availability: [
+      { dayOfWeek: 1, startTime: '09:00', endTime: '17:00' },
+      { dayOfWeek: 2, startTime: '09:00', endTime: '17:00' },
+      { dayOfWeek: 3, startTime: '09:00', endTime: '17:00' },
+      { dayOfWeek: 4, startTime: '09:00', endTime: '17:00' },
+      { dayOfWeek: 5, startTime: '09:00', endTime: '17:00' },
+    ],
+    createdAt: new Date('2024-01-20'),
+  },
+];
+
+// Mock Bookings
+export const mockBookings: Booking[] = [
+  {
+    id: '1',
+    customerId: '1',
+    customer: mockUsers[0],
+    providerId: '1',
+    provider: mockProviders[0],
+    serviceType: 'plumbing',
+    status: 'completed',
+    scheduledDate: new Date('2024-03-15'),
+    scheduledTime: '10:00',
+    address: 'ul. Nowy Świat 45, Warszawa',
+    notes: 'Leaking faucet in the kitchen',
+    price: 150,
+    createdAt: new Date('2024-03-10'),
+    updatedAt: new Date('2024-03-15'),
+  },
+  {
+    id: '2',
+    customerId: '1',
+    customer: mockUsers[0],
+    providerId: '2',
+    provider: mockProviders[1],
+    serviceType: 'cleaning',
+    status: 'confirmed',
+    scheduledDate: new Date('2024-04-10'),
+    scheduledTime: '14:00',
+    address: 'ul. Nowy Świat 45, Warszawa',
+    notes: 'Monthly deep cleaning',
+    price: 320,
+    createdAt: new Date('2024-04-01'),
+    updatedAt: new Date('2024-04-02'),
+  },
+  {
+    id: '3',
+    customerId: '1',
+    customer: mockUsers[0],
+    serviceType: 'it_support',
+    status: 'searching_provider',
+    scheduledDate: new Date('2024-04-20'),
+    scheduledTime: '11:00',
+    address: 'ul. Nowy Świat 45, Warszawa',
+    notes: 'WiFi network setup',
+    createdAt: new Date('2024-04-05'),
+    updatedAt: new Date('2024-04-05'),
+  },
+];
+
+// Mock Reviews
+export const mockReviews: Review[] = [
+  {
+    id: '1',
+    bookingId: '1',
+    customerId: '1',
+    customer: mockUsers[0],
+    providerId: '1',
+    provider: mockProviders[0],
+    rating: 5,
+    comment: 'Excellent service! Marek arrived on time and fixed the leak quickly. Very professional and clean work. Highly recommended!',
+    createdAt: new Date('2024-03-16'),
+  },
+  {
+    id: '2',
+    bookingId: '1',
+    customerId: '1',
+    customer: mockUsers[0],
+    providerId: '1',
+    provider: mockProviders[0],
+    rating: 4,
+    comment: 'Great job overall. The only minor issue was a slight delay, but the quality of work made up for it.',
+    createdAt: new Date('2024-03-17'),
+  },
+];
+
+// Mock Messages
+export const mockMessages: Message[] = [
+  {
+    id: '1',
+    bookingId: '2',
+    senderId: '3',
+    sender: mockUsers[2],
+    content: 'Hello! I\'m looking forward to cleaning your apartment tomorrow. Do you have any specific areas you\'d like me to focus on?',
+    createdAt: new Date('2024-04-09T10:00:00'),
+    isRead: true,
+  },
+  {
+    id: '2',
+    bookingId: '2',
+    senderId: '1',
+    sender: mockUsers[0],
+    content: 'Hi Katarzyna! Yes, please pay extra attention to the kitchen and bathroom. Thank you!',
+    createdAt: new Date('2024-04-09T11:30:00'),
+    isRead: true,
+  },
+  {
+    id: '3',
+    bookingId: '2',
+    senderId: '3',
+    sender: mockUsers[2],
+    content: 'Perfect! I\'ll make sure those areas are spotless. See you tomorrow at 2 PM.',
+    createdAt: new Date('2024-04-09T12:00:00'),
+    isRead: false,
+  },
+];
+
+// Mock Notifications
+export const mockNotifications: Notification[] = [
+  {
+    id: '1',
+    userId: '1',
+    type: 'booking_confirmed',
+    titleKey: 'notifications.bookingConfirmed',
+    messageKey: 'notifications.bookingConfirmedMsg',
+    data: { bookingId: '2' },
+    isRead: false,
+    createdAt: new Date('2024-04-02'),
+  },
+  {
+    id: '2',
+    userId: '1',
+    type: 'new_message',
+    titleKey: 'notifications.newMessage',
+    messageKey: 'notifications.newMessageMsg',
+    data: { senderName: 'Katarzyna Wiśniewska' },
+    isRead: false,
+    createdAt: new Date('2024-04-09'),
+  },
+];
+
+// Testimonials for Landing Page
+export const testimonials = [
+  {
+    id: '1',
+    name: 'Anna Kowalska',
+    location: 'Warszawa',
+    avatar: '/images/avatars/avatar-1.jpg',
+    rating: 5,
+    textKey: 'testimonials.annaText',
+    service: 'plumbing',
+  },
+  {
+    id: '2',
+    name: 'Marek Nowak',
+    location: 'Kraków',
+    avatar: '/images/avatars/avatar-2.jpg',
+    rating: 5,
+    textKey: 'testimonials.marekText',
+    service: 'cleaning',
+  },
+  {
+    id: '3',
+    name: 'Katarzyna Wiśniewska',
+    location: 'Wrocław',
+    avatar: '/images/avatars/avatar-4.jpg',
+    rating: 4,
+    textKey: 'testimonials.katarzynaText',
+    service: 'it_support',
+  },
+  {
+    id: '4',
+    name: 'Piotr Dąbrowski',
+    location: 'Łódź',
+    avatar: '/images/avatars/avatar-3.jpg',
+    rating: 5,
+    textKey: 'testimonials.piotrText',
+    service: 'electrical',
+  },
+  {
+    id: '5',
+    name: 'Zofia Lewandowska',
+    location: 'Poznań',
+    avatar: '/images/avatars/avatar-6.jpg',
+    rating: 5,
+    textKey: 'testimonials.zofiaText',
+    service: 'cleaning',
+  },
+  {
+    id: '6',
+    name: 'Jan Kowalczyk',
+    location: 'Gdańsk',
+    avatar: '/images/avatars/avatar-5.jpg',
+    rating: 4,
+    textKey: 'testimonials.janText',
+    service: 'painting',
+  },
+];
+
+// Stats for Landing Page
+export const stats = [
+  { value: '50,000+', labelKey: 'stats.servicesCompleted' },
+  { value: '5,000+', labelKey: 'stats.verifiedProviders' },
+  { value: '4.8', labelKey: 'stats.averageRating' },
+  { value: '15min', labelKey: 'stats.avgResponseTime' },
+];
