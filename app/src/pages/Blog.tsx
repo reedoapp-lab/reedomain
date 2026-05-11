@@ -68,7 +68,7 @@ export default function Blog() {
           <div className="overflow-hidden rounded-[32px] border border-[#5B3DF5]/10 bg-[#faf7ff] shadow-[0_25px_80px_rgba(91,61,245,0.08)]">
 
             <img
-              src="/images/52.png"
+              src="/images/59.png"
               alt="Reedo"
               className="h-[520px] w-full object-cover"
             />
