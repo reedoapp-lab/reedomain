@@ -6,7 +6,6 @@ import {
   Code2,
   ShieldCheck,
   BrainCircuit,
-  ArrowRight,
   Mail,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';

@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuthStore } from '@/store/authStore';
 import { LanguageSwitch } from '@/components/shared/LanguageSwitch';
+import type { UserRole } from '@/types';
 
 export function Signup() {
   const { t } = useTranslation();
@@ -29,7 +30,7 @@ export function Signup() {
     email: '',
     phone: '',
     password: '',
-    role: 'customer',
+    role: 'customer' as UserRole
   });
 
   const [showPassword, setShowPassword] = useState(false);

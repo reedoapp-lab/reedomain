@@ -32,7 +32,6 @@ import {
 
 import {
   Card,
-  CardContent,
 } from '@/components/ui/card';
 
 import { Navigation } from '@/components/layout/Navigation';

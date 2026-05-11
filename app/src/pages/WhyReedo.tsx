@@ -1,7 +1,7 @@
 import { Navigation } from '@/components/layout/Navigation';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Sparkles, ShieldCheck, Globe2, Clock3 } from 'lucide-react';
+import { Sparkles, ShieldCheck, Globe2, Clock3 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export default function WhyReedo() {

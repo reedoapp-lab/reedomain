@@ -6,7 +6,6 @@ import {
   Globe2,
   Sparkles,
   ShieldCheck,
-  ArrowRight,
   Mail,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';

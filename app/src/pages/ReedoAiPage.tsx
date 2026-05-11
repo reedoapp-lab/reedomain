@@ -7,7 +7,6 @@ import {
   Clock3,
   ShieldCheck,
   Sparkles,
-  ArrowRight,
   Zap,
   Languages,
 } from 'lucide-react';

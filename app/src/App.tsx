@@ -15,7 +15,6 @@ import { ProviderProfile } from '@/pages/ProviderProfile';
 import { Booking } from '@/pages/Booking';
 import { Payment } from '@/pages/Payment';
 import { Messaging } from '@/pages/Messaging';
-import TrustSafetyPage from '@/pages/TrustSafetyPage'; // ✅ added
 import WhyReedo from '@/pages/WhyReedo';
 import JoinProfessionals from '@/pages/JoinProfessionals';
 import TermsPage from '@/pages/TermsPage';
@@ -28,6 +27,7 @@ import CareersPage from '@/pages/CareersPage';
 import ReedoValidationPage from '@/pages/ReedoValidationPage';
 import Blog from '@/pages/Blog';
 import CustomerProfilePage from '@/pages/CustomerProfile';
+import TrustSafetyPage from '@/pages/TrustSafetyPage';
 
 
 // Loading component
@@ -82,7 +82,6 @@ function App() {
              <Route path="/join-professionals" element={<JoinProfessionals />} />
              
 
-            {/* ✅ NEW: Trust & Safety page (public) */}
             <Route path="/trust-safety" element={<TrustSafetyPage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/help" element={<HelpCenterPage />} />

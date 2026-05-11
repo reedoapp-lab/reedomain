@@ -68,7 +68,7 @@ export default function TrustSafetyPage() {
                   <img
                     src={item.image}
                     alt={item.title}
-                    className="w-full max-w-40 mx-auto object-contain rounded-1 shadow-[0_20px_50px_rgba(0,0,0,0.06)]"
+                    className="w-full max-w-0 mx-auto object-contain rounded-1 shadow-[0_20px_50px_rgba(0,0,0,0.06)]"
                   />
                 </div>
               </div>

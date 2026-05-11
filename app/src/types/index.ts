@@ -27,6 +27,7 @@ export interface Provider {
   isVerified: boolean;
   verificationStatus: 'pending' | 'approved' | 'rejected';
   photos: string[];
+  languages?: string[];
   documents: string[];
   availability: AvailabilitySlot[];
   createdAt: Date;
