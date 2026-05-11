@@ -25,6 +25,10 @@ import { ScrollToTop } from '@/components/shared/ScrollToTop';
 import ReedoAiPage from '@/pages/ReedoAiPage';
 import PressPage from '@/pages/PressPage';
 import CareersPage from '@/pages/CareersPage';
+import ReedoValidationPage from '@/pages/ReedoValidationPage';
+import Blog from '@/pages/Blog';
+import CustomerProfilePage from '@/pages/CustomerProfile';
+
 
 // Loading component
 function Loading() {
@@ -87,6 +91,15 @@ function App() {
             <Route path="/press" element={<PressPage />} />
             <Route path="/careers" element={<CareersPage />} />
 
+            <Route
+  path="/validation"
+  element={<ReedoValidationPage />}
+/>
+<Route
+  path="/profile"
+  element={<CustomerProfilePage />}
+/>
+
             {/* Protected Routes */}
             <Route
               path="/dashboard"
@@ -105,8 +118,12 @@ function App() {
                 </ProtectedRoute>
               }
             />
-
             <Route
+  path="/blog"
+  element={<Blog />}
+/>
+
+        <Route
               path="/provider/:id"
               element={
                 <ProtectedRoute>

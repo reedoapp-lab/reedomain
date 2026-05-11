@@ -53,25 +53,35 @@ const navLinks = [
 
 { label: 'Support', type: 'route', value: '/help', },
 
-   {
+/*    {
     label: 'Hiring Professionals',
     type: 'route',
     value: '/join-professionals',
-  },
+  }, */
 ];
 
   return (
     <header className="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
-      <div
-        className={cn(
-          "w-full max-w-9xl transition-all duration-300",
-          "bg-white/80 backdrop-blur-xl",
-          "border border-gray-200/60",
-          "shadow-[0_10px_30px_rgba(0,0,0,0.06)]",
-          "rounded-xl",
-          isScrolled && "scale-[0.98] shadow-[0_15px_40px_rgba(0,0,0,0.08)]"
-        )}
-      >
+<div
+  className={cn(
+    'relative w-full max-w-9xl overflow-hidden rounded-2xl transition-all duration-500',
+
+    // GLASS
+    'bg-white/78 backdrop-blur-2xl',
+
+    // THIN ACCENT OUTLINE
+    'border border-[#7C5CFF]/25',
+
+    // SOFT SHADOW
+    'shadow-[0_20px_60px_rgba(0,0,0,0.06)]',
+
+    // VERY SUBTLE INNER LIGHT
+    'before:absolute before:inset-0 before:rounded-2xl before:border before:border-white/40 before:pointer-events-none',
+
+    isScrolled &&
+      'scale-[0.985] shadow-[0_25px_70px_rgba(91,61,245,0.10)]'
+  )}
+>
         <nav className="flex h-16 items-center justify-between px-6">
 
           {/* LOGO */}
@@ -180,7 +190,8 @@ const navLinks = [
                   className="hidden sm:flex bg-[#5B3DF5] hover:bg-[#4c32d9] text-white px-5 py-2 rounded-lg shadow-[0_8px_20px_rgba(91,61,245,0.3)] transition-all hover:-translate-y-[1px]"
                   onClick={() => navigate('/signup')}
                 >
-                  {t('nav.becomeProvider')}
+                  {/* {t('nav.becomeProvider')} */}
+                  Join Reedo
                 </Button>
               </>
             )}

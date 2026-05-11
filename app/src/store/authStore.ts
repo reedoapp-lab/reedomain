@@ -1,19 +1,35 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { User, LoginCredentials, SignupData } from '@/types';
-import { mockUsers } from '@/lib/mockData';
+
+import type {
+  User,
+  LoginCredentials,
+  SignupData,
+} from '@/types';
+
+import { supabase } from '@/lib/supabase';
 
 interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
-  
-  // Actions
-  login: (credentials: LoginCredentials) => Promise<boolean>;
-  signup: (data: SignupData) => Promise<boolean>;
-  logout: () => void;
-  updateUser: (user: Partial<User>) => void;
+
+  // ACTIONS
+  login: (
+    credentials: LoginCredentials
+  ) => Promise<boolean>;
+
+  signup: (
+    data: SignupData
+  ) => Promise<boolean>;
+
+  logout: () => Promise<void>;
+
+  updateUser: (
+    user: Partial<User>
+  ) => void;
+
   clearError: () => void;
 }
 
@@ -25,97 +41,150 @@ export const useAuthStore = create<AuthState>()(
       isLoading: false,
       error: null,
 
+      // LOGIN
       login: async (credentials) => {
-        set({ isLoading: true, error: null });
-        
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Mock authentication - in real app, this would be an API call
-        const user = mockUsers.find(u => u.email === credentials.email);
-        
-        if (user && credentials.password === 'password') {
-          set({ 
-            user, 
-            isAuthenticated: true, 
+        set({
+          isLoading: true,
+          error: null,
+        });
+
+        const { data, error } =
+          await supabase.auth.signInWithPassword({
+            email: credentials.email,
+            password: credentials.password,
+          });
+
+        if (error || !data.user) {
+          set({
             isLoading: false,
-            error: null 
+            error:
+              error?.message ||
+              'Login failed',
           });
-          return true;
-        } else {
-          set({ 
-            isLoading: false, 
-            error: 'Invalid email or password' 
-          });
+
           return false;
         }
+
+        const user: User = {
+          id: data.user.id,
+          email: data.user.email || '',
+          firstName: '',
+          lastName: '',
+          role: 'customer',
+          phone: '',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+
+        set({
+          user,
+          isAuthenticated: true,
+          isLoading: false,
+          error: null,
+        });
+
+        return true;
       },
 
+      // SIGNUP
       signup: async (data) => {
-        set({ isLoading: true, error: null });
-        
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Check if email already exists
-        const existingUser = mockUsers.find(u => u.email === data.email);
-        if (existingUser) {
-          set({ 
-            isLoading: false, 
-            error: 'Email already registered' 
+        set({
+          isLoading: true,
+          error: null,
+        });
+
+        const {
+          data: authData,
+          error,
+        } = await supabase.auth.signUp({
+          email: data.email,
+          password: data.password,
+        });
+
+        if (error || !authData.user) {
+          set({
+            isLoading: false,
+            error:
+              error?.message ||
+              'Signup failed',
           });
+
           return false;
         }
-        
-        // Create new user
+
+        // SAVE PROFILE
+        await supabase
+          .from('profiles')
+          .insert({
+            id: authData.user.id,
+            full_name: `${data.firstName} ${data.lastName}`,
+            phone: data.phone,
+            address: '',
+            role: 'customer',
+            complaint_history: [],
+          });
+
         const newUser: User = {
-          id: String(mockUsers.length + 1),
+          id: authData.user.id,
           email: data.email,
           firstName: data.firstName,
           lastName: data.lastName,
-          role: data.role,
+          role: 'customer',
           phone: data.phone,
           createdAt: new Date(),
           updatedAt: new Date(),
         };
-        
-        mockUsers.push(newUser);
-        
-        set({ 
-          user: newUser, 
-          isAuthenticated: true, 
+
+        set({
+          user: newUser,
+          isAuthenticated: true,
           isLoading: false,
-          error: null 
+          error: null,
         });
+
         return true;
       },
 
-      logout: () => {
-        set({ 
-          user: null, 
-          isAuthenticated: false, 
-          error: null 
+      // LOGOUT
+      logout: async () => {
+        await supabase.auth.signOut();
+
+        set({
+          user: null,
+          isAuthenticated: false,
+          error: null,
         });
       },
 
+      // UPDATE USER
       updateUser: (userData) => {
         const { user } = get();
+
         if (user) {
-          set({ 
-            user: { ...user, ...userData, updatedAt: new Date() } 
+          set({
+            user: {
+              ...user,
+              ...userData,
+              updatedAt: new Date(),
+            },
           });
         }
       },
 
+      // CLEAR ERROR
       clearError: () => {
-        set({ error: null });
+        set({
+          error: null,
+        });
       },
     }),
     {
       name: 'auth-storage',
-      partialize: (state) => ({ 
-        user: state.user, 
-        isAuthenticated: state.isAuthenticated 
+
+      partialize: (state) => ({
+        user: state.user,
+        isAuthenticated:
+          state.isAuthenticated,
       }),
     }
   )
