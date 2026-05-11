@@ -4,30 +4,42 @@ import { Footer } from '@/components/layout/Footer';
 export default function Blog() {
 
   return (
-    <div className="min-h-screen bg-white text-black">
+    <div className="min-h-screen bg-white text-black overflow-hidden">
 
       {/* NAVIGATION */}
       <Navigation />
 
       {/* HERO */}
-      <section className="relative overflow-hidden border-b border-gray-100 bg-gradient-to-b from-[#f6f3ff] via-white to-white px-6 pb-24 pt-40">
+      <section className="relative border-b border-gray-100 bg-gradient-to-b from-[#f7f3ff] via-white to-[#fffaf7] px-6 pb-28 pt-40">
 
-        {/* ACCENT GLOW */}
-        <div className="pointer-events-none absolute left-1/2 top-0 h-[320px] w-[700px] -translate-x-1/2 rounded-full bg-[#5B3DF5]/15 blur-[120px]" />
+        {/* BACKGROUND GLOW */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+
+          <div className="absolute left-1/2 top-0 h-[380px] w-[760px] -translate-x-1/2 rounded-full bg-[#5B3DF5]/15 blur-[140px]" />
+
+          <div className="absolute right-0 top-20 h-[240px] w-[240px] rounded-full bg-orange-200/30 blur-[120px]" />
+
+          <div className="absolute bottom-0 left-0 h-[260px] w-[260px] rounded-full bg-[#5B3DF5]/10 blur-[120px]" />
+
+        </div>
 
         <div className="relative mx-auto max-w-6xl">
 
           {/* TAG */}
-          <div className="inline-flex items-center rounded-full border border-[#5B3DF5]/20 bg-[#5B3DF5]/5 px-4 py-2 text-sm font-medium text-[#5B3DF5]">
+          <div className="inline-flex items-center rounded-full border border-[#5B3DF5]/15 bg-white/70 px-5 py-2 text-sm font-medium text-[#5B3DF5] backdrop-blur-xl">
+
             Reedo Insights
+
           </div>
 
           {/* TITLE */}
-          <h1 className="mt-8 max-w-5xl text-5xl font-semibold leading-tight tracking-tight sm:text-6xl">
+          <h1 className="mt-8 max-w-5xl text-5xl font-semibold leading-tight tracking-tight text-black sm:text-6xl">
 
             The Future Of Smart Services
-            <span className="block text-[#5B3DF5]">
+            <span className="block bg-gradient-to-r from-[#5B3DF5] to-[#7c5cff] bg-clip-text text-transparent">
+
               Starts With Simplicity
+
             </span>
 
           </h1>
@@ -59,27 +71,47 @@ export default function Blog() {
         </div>
       </section>
 
-      {/* MAIN CONTENT */}
+      {/* MAIN */}
       <section className="px-6 py-24">
 
         <div className="mx-auto max-w-6xl">
 
-          {/* FEATURE IMAGE */}
-          <div className="overflow-hidden rounded-[32px] border border-[#5B3DF5]/10 bg-[#faf7ff] shadow-[0_25px_80px_rgba(91,61,245,0.08)]">
+          {/* FEATURE BLOCK */}
+          <div className="rounded-[36px] border border-[#5B3DF5]/10 bg-gradient-to-br from-[#faf7ff] via-white to-[#fff7f2] p-12 shadow-[0_25px_80px_rgba(91,61,245,0.08)]">
 
-            <img
-              src="/images/59.png"
-              alt="Reedo"
-              className="h-[520px] w-full object-cover"
-            />
+            <div className="max-w-4xl">
+
+              <div className="inline-flex items-center rounded-full border border-[#5B3DF5]/15 bg-[#5B3DF5]/5 px-4 py-2 text-sm font-medium text-[#5B3DF5]">
+
+                Reedo Vision
+
+              </div>
+
+              <h2 className="mt-6 text-4xl font-semibold leading-tight tracking-tight text-black">
+
+                Reimagining Everyday Services
+                Through AI, Simplicity,
+                And Trust
+
+              </h2>
+
+              <p className="mt-6 max-w-3xl text-lg leading-8 text-gray-600">
+
+                Reedo is building a modern ecosystem where discovering,
+                booking, and managing trusted professionals becomes
+                seamless, intelligent, and accessible for everyone.
+
+              </p>
+
+            </div>
 
           </div>
 
-          {/* GRID */}
+          {/* CONTENT GRID */}
           <div className="mt-20 grid gap-16 lg:grid-cols-[1fr_320px]">
 
             {/* ARTICLE */}
-            <article className="max-w-none">
+            <article>
 
               <div className="space-y-8 text-lg leading-9 text-gray-600">
 
@@ -107,10 +139,12 @@ export default function Blog() {
               </div>
 
               {/* SECTION */}
-              <div className="mt-16">
+              <div className="mt-20">
 
-                <h2 className="text-4xl font-semibold tracking-tight">
+                <h2 className="text-4xl font-semibold tracking-tight text-black">
+
                   Why Reedo Exists
+
                 </h2>
 
                 <div className="mt-8 space-y-8 text-lg leading-9 text-gray-600">
@@ -141,13 +175,16 @@ export default function Blog() {
                   </p>
 
                 </div>
+
               </div>
 
-              {/* SECTION */}
-              <div className="mt-20 rounded-[32px] border border-[#5B3DF5]/10 bg-[#faf7ff] p-10 shadow-[0_20px_60px_rgba(91,61,245,0.06)]">
+              {/* HIGHLIGHT */}
+              <div className="mt-20 rounded-[36px] border border-[#5B3DF5]/10 bg-gradient-to-br from-[#faf7ff] to-white p-10 shadow-[0_20px_60px_rgba(91,61,245,0.06)]">
 
-                <h3 className="text-3xl font-semibold">
+                <h3 className="text-3xl font-semibold text-black">
+
                   What Makes Reedo Different
+
                 </h3>
 
                 <div className="mt-10 grid gap-6 sm:grid-cols-2">
@@ -176,28 +213,35 @@ export default function Blog() {
                   ].map((item) => (
                     <div
                       key={item.title}
-                      className="rounded-2xl border border-white bg-white p-6 shadow-sm"
+                      className="rounded-3xl border border-white bg-white p-7 shadow-sm"
                     >
 
                       <h4 className="text-xl font-semibold text-black">
+
                         {item.title}
+
                       </h4>
 
-                      <p className="mt-3 leading-7 text-gray-600">
+                      <p className="mt-4 leading-8 text-gray-600">
+
                         {item.text}
+
                       </p>
 
                     </div>
                   ))}
 
                 </div>
+
               </div>
 
               {/* SECTION */}
               <div className="mt-20">
 
-                <h2 className="text-4xl font-semibold tracking-tight">
+                <h2 className="text-4xl font-semibold tracking-tight text-black">
+
                   Built Around Real Problems
+
                 </h2>
 
                 <div className="mt-8 space-y-8 text-lg leading-9 text-gray-600">
@@ -227,10 +271,11 @@ export default function Blog() {
                   </p>
 
                 </div>
+
               </div>
 
               {/* QUOTE */}
-              <div className="mt-20 overflow-hidden rounded-[32px] border border-[#5B3DF5]/10 bg-gradient-to-b from-[#faf7ff] to-white p-10 shadow-[0_20px_60px_rgba(91,61,245,0.08)]">
+              <div className="mt-20 rounded-[36px] border border-[#5B3DF5]/10 bg-gradient-to-br from-[#faf7ff] via-white to-[#fffaf7] p-12 shadow-[0_25px_80px_rgba(91,61,245,0.08)]">
 
                 <p className="text-3xl font-semibold leading-relaxed tracking-tight text-black">
 
@@ -241,16 +286,20 @@ export default function Blog() {
                 </p>
 
                 <p className="mt-6 text-gray-500">
+
                   — Reedo Vision
+
                 </p>
 
               </div>
 
-              {/* SECTION */}
+              {/* FINAL SECTION */}
               <div className="mt-20">
 
-                <h2 className="text-4xl font-semibold tracking-tight">
+                <h2 className="text-4xl font-semibold tracking-tight text-black">
+
                   Looking Ahead
+
                 </h2>
 
                 <div className="mt-8 space-y-8 text-lg leading-9 text-gray-600">
@@ -265,29 +314,20 @@ export default function Blog() {
                   <p>
 
                     The platform aims to combine:
+
                   </p>
 
-                  <ul className="space-y-4 pl-6 text-gray-700">
+                  <ul className="space-y-4 pl-4 text-gray-700">
 
-                    <li>
-                      • AI-powered assistance
-                    </li>
+                    <li>• AI-powered assistance</li>
 
-                    <li>
-                      • Seamless booking experiences
-                    </li>
+                    <li>• Seamless booking experiences</li>
 
-                    <li>
-                      • Trusted professionals
-                    </li>
+                    <li>• Trusted professionals</li>
 
-                    <li>
-                      • Intelligent recommendations
-                    </li>
+                    <li>• Intelligent recommendations</li>
 
-                    <li>
-                      • Modern service infrastructure
-                    </li>
+                    <li>• Modern service infrastructure</li>
 
                   </ul>
 
@@ -299,6 +339,7 @@ export default function Blog() {
                   </p>
 
                 </div>
+
               </div>
 
             </article>
@@ -307,15 +348,19 @@ export default function Blog() {
             <aside className="space-y-8">
 
               {/* CARD */}
-              <div className="rounded-[28px] border border-[#5B3DF5]/10 bg-white p-8 shadow-[0_15px_50px_rgba(91,61,245,0.06)]">
+              <div className="rounded-[32px] border border-[#5B3DF5]/10 bg-white p-8 shadow-[0_15px_50px_rgba(91,61,245,0.06)]">
 
                 <p className="text-sm font-medium uppercase tracking-wider text-[#5B3DF5]">
+
                   Reedo Mission
+
                 </p>
 
-                <h3 className="mt-4 text-2xl font-semibold leading-tight">
+                <h3 className="mt-4 text-3xl font-semibold leading-tight text-black">
+
                   Smarter Services.
                   Simpler Living.
+
                 </h3>
 
                 <p className="mt-5 leading-8 text-gray-600">
@@ -329,10 +374,12 @@ export default function Blog() {
               </div>
 
               {/* CARD */}
-              <div className="rounded-[28px] border border-gray-100 bg-[#fafafa] p-8">
+              <div className="rounded-[32px] border border-gray-100 bg-gradient-to-br from-white to-[#faf7ff] p-8 shadow-[0_15px_50px_rgba(0,0,0,0.04)]">
 
-                <h3 className="text-2xl font-semibold">
+                <h3 className="text-2xl font-semibold text-black">
+
                   Explore Reedo
+
                 </h3>
 
                 <p className="mt-4 leading-8 text-gray-600">
@@ -346,16 +393,20 @@ export default function Blog() {
 
                   <a
                     href="/why-reedo"
-                    className="rounded-2xl bg-[#5B3DF5] px-6 py-3 text-center text-white shadow-[0_12px_35px_rgba(91,61,245,0.35)] transition-all hover:-translate-y-[1px] hover:bg-[#4c32d9]"
+                    className="rounded-2xl bg-[#5B3DF5] px-6 py-4 text-center text-white shadow-[0_12px_35px_rgba(91,61,245,0.35)] transition-all duration-300 hover:-translate-y-[1px] hover:bg-[#4c32d9]"
                   >
+
                     About Reedo
+
                   </a>
 
                   <a
                     href="/services"
-                    className="rounded-2xl border border-gray-200 bg-white px-6 py-3 text-center text-gray-700 transition-all hover:border-[#5B3DF5] hover:text-[#5B3DF5]"
+                    className="rounded-2xl border border-gray-200 bg-white px-6 py-4 text-center text-gray-700 transition-all hover:border-[#5B3DF5] hover:text-[#5B3DF5]"
                   >
+
                     Browse Services
+
                   </a>
 
                 </div>
@@ -365,19 +416,32 @@ export default function Blog() {
             </aside>
 
           </div>
+
         </div>
+
       </section>
 
       {/* CTA */}
-      <section className="border-t border-gray-100 bg-[#faf7ff] px-6 py-24">
+      <section className="relative overflow-hidden border-t border-gray-100 bg-gradient-to-b from-[#faf7ff] via-white to-[#fffaf7] px-6 py-24">
 
-        <div className="mx-auto max-w-5xl text-center">
+        {/* GLOW */}
+        <div className="pointer-events-none absolute inset-0">
 
-          <h2 className="text-5xl font-semibold tracking-tight">
+          <div className="absolute left-1/2 top-0 h-[300px] w-[600px] -translate-x-1/2 rounded-full bg-[#5B3DF5]/10 blur-[120px]" />
+
+        </div>
+
+        <div className="relative mx-auto max-w-5xl text-center">
+
+          <h2 className="text-5xl font-semibold tracking-tight text-black">
+
             Building The Future Of
-            <span className="block text-[#5B3DF5]">
+            <span className="block bg-gradient-to-r from-[#5B3DF5] to-[#7c5cff] bg-clip-text text-transparent">
+
               Smart Services
+
             </span>
+
           </h2>
 
           <p className="mx-auto mt-8 max-w-3xl text-xl leading-9 text-gray-600">
@@ -394,19 +458,24 @@ export default function Blog() {
               href="/services"
               className="rounded-2xl bg-[#5B3DF5] px-8 py-4 text-white shadow-[0_15px_40px_rgba(91,61,245,0.35)] transition-all duration-300 hover:-translate-y-[1px] hover:bg-[#4c32d9]"
             >
+
               Explore Services
+
             </a>
 
             <a
               href="/validation"
               className="rounded-2xl border border-gray-200 bg-white px-8 py-4 text-gray-700 transition-all hover:border-[#5B3DF5] hover:text-[#5B3DF5]"
             >
+
               Join Validation Program
+
             </a>
 
           </div>
 
         </div>
+
       </section>
 
       {/* FOOTER */}
