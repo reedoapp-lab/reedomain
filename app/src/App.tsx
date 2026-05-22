@@ -28,6 +28,7 @@ import ReedoValidationPage from '@/pages/ReedoValidationPage';
 import Blog from '@/pages/Blog';
 import CustomerProfilePage from '@/pages/CustomerProfile';
 import TrustSafetyPage from '@/pages/TrustSafetyPage';
+import AuthCallback from '@/pages/AuthCallback';
 
 
 // Loading component
@@ -169,6 +170,10 @@ function App() {
 
             {/* Catch all */}
             <Route path="*" element={<Navigate to="/" replace />} />
+            <Route
+  path="/auth/callback"
+  element={<AuthCallback />}
+/>
 
           </Routes>
         </Suspense>
@@ -180,3 +185,4 @@ function App() {
 
 
 export default App;
+

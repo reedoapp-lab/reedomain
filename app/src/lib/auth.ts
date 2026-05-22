@@ -17,3 +17,4 @@ export async function signIn(email: string, password: string) {
 export async function signOut() {
   return await supabase.auth.signOut();
 }
+

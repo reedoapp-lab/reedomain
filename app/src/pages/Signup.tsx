@@ -25,15 +25,16 @@ import type { UserRole } from '@/types';
 
 export function Signup() {
 
-  const { t } = useTranslation();
+  useTranslation();
 
   const navigate = useNavigate();
 
-  const {
-    signup,
-    isLoading,
-    error,
-  } = useAuthStore();
+ const {
+  signup,
+  googleSignIn,
+  isLoading,
+  error,
+} = useAuthStore();
 
   const [showPassword, setShowPassword] =
     useState(false);
@@ -405,16 +406,14 @@ export function Signup() {
 
             {/* GOOGLE */}
             <Button
-              type="button"
-              variant="outline"
-              className="h-12 w-full rounded-xl"
-            >
-
-              <Chrome className="mr-2 h-5 w-5" />
-
-              Continue with Google
-
-            </Button>
+ type="button"
+  variant="outline"
+  className="w-full"
+  onClick={googleSignIn}
+>
+  <Chrome className="mr-2 h-5 w-5" />
+  Continue with Google
+</Button>
 
           </form>
 

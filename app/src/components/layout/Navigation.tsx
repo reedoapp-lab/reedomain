@@ -29,10 +29,13 @@ export function Navigation() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
+const handleLogout = async () => {
+
+  await logout();
+
+  window.location.href = '/login';
+
+};
 
   // ✅ UPDATED NAV LINKS
 const navLinks = [

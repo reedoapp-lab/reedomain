@@ -12,7 +12,12 @@ import { LanguageSwitch } from '@/components/shared/LanguageSwitch';
 export function Login() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { login, isLoading, error } = useAuthStore();
+  const {
+  login,
+  googleSignIn,
+  isLoading,
+  error,
+} = useAuthStore();
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -153,15 +158,15 @@ export function Login() {
             </div>
 
             {/* Google */}
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full"
-              onClick={() => {}}
-            >
-              <Chrome className="mr-2 h-5 w-5" />
-              Google
-            </Button>
+<Button
+  type="button"
+  variant="outline"
+  className="w-full"
+  onClick={googleSignIn}
+>
+  <Chrome className="mr-2 h-5 w-5" />
+  Continue with Google
+</Button>
 
           </form>
 

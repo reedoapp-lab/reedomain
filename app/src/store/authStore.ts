@@ -12,6 +12,7 @@ import { supabase } from '@/lib/supabase';
 interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
+  googleSignIn: () => Promise<void>,
   isLoading: boolean;
   error: string | null;
 
@@ -85,7 +86,26 @@ export const useAuthStore = create<AuthState>()(
 
         return true;
       },
+    
+googleSignIn: async () => {
 
+  const { error } =
+    await supabase.auth.signInWithOAuth({
+
+      provider: 'google',
+
+      options: {
+        redirectTo:
+          window.location.origin +
+          '/auth/callback',
+      },
+    });
+
+  if (error) {
+    console.error(error.message);
+  }
+
+},
       // SIGNUP
       signup: async (data) => {
         set({
@@ -146,15 +166,28 @@ export const useAuthStore = create<AuthState>()(
       },
 
       // LOGOUT
-      logout: async () => {
-        await supabase.auth.signOut();
+logout: async () => {
 
-        set({
-          user: null,
-          isAuthenticated: false,
-          error: null,
-        });
-      },
+  // SIGN OUT FROM SUPABASE
+  const { error } =
+    await supabase.auth.signOut();
+
+  if (error) {
+
+    console.error(error.message);
+    return;
+
+  }
+
+  // CLEAR LOCAL STATE
+  set({
+    user: null,
+  });
+
+  // FORCE REDIRECT
+  window.location.href = '/login';
+
+},
 
       // UPDATE USER
       updateUser: (userData) => {
@@ -188,4 +221,38 @@ export const useAuthStore = create<AuthState>()(
       }),
     }
   )
+);
+
+supabase.auth.onAuthStateChange(
+  async (event, session) => {
+
+    if (
+      event === 'SIGNED_IN' &&
+      session?.user
+    ) {
+
+      const user = session.user;
+
+      await supabase
+        .from('profiles')
+        .upsert({
+          id: user.id,
+
+          email: user.email,
+
+          full_name:
+            user.user_metadata
+              ?.full_name || '',
+
+          avatar_url:
+            user.user_metadata
+              ?.avatar_url || '',
+
+          phone: '',
+
+          role: 'customer',
+        });
+
+    }
+  }
 );
