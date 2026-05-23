@@ -65,6 +65,7 @@ export const useAuthStore = create<AuthState>()(
           });
 
           return false;
+
         }
 
         set({
@@ -97,6 +98,7 @@ export const useAuthStore = create<AuthState>()(
           error: null,
         });
 
+        // CREATE AUTH USER
         const {
           data,
           error,
@@ -119,51 +121,59 @@ export const useAuthStore = create<AuthState>()(
 
         });
 
-        if (error || !data.user) {
+        // SIGNUP ERROR
+        if (
+          error ||
+          !data.user
+        ) {
 
           set({
+
             isLoading: false,
+
             error:
               error?.message ||
               'Signup failed',
+
           });
 
           return false;
+
         }
 
-        // CREATE PROFILE
-        const { error: profileError } =
-          await supabase
-            .from('profiles')
-            .insert({
+        // CREATE OR UPDATE PROFILE
+        const {
+          error: profileError,
+        } = await supabase
+          .from('profiles')
+          .upsert({
 
-              id: data.user.id,
+            id: data.user.id,
 
-              email,
+            email: email,
 
-              full_name:
-                `${firstName} ${lastName}`,
+            full_name:
+              `${firstName} ${lastName}`,
 
-              phone,
+            phone: phone,
 
-              role: 'customer',
+            address: '',
 
-              address: '',
+            role: 'customer',
 
-              avatar_url: '',
+          });
 
-              complaint_history: [],
-
-            });
-
+        // LOG PROFILE ERROR
         if (profileError) {
 
           console.error(
-            profileError.message
+            'PROFILE ERROR:',
+            profileError
           );
 
         }
 
+        // SAVE USER STATE
         set({
 
           user: data.user,
@@ -234,3 +244,4 @@ export const useAuthStore = create<AuthState>()(
   )
 
 );
+

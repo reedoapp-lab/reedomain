@@ -3,9 +3,31 @@ import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 import { Sparkles, ShieldCheck, Globe2, Clock3 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/lib/supabase';
+import { useEffect, useState } from 'react';
 
 export default function WhyReedo() {
+
   const navigate = useNavigate();
+
+  const [isLoggedIn, setIsLoggedIn] =
+    useState(false);
+
+  useEffect(() => {
+
+    const checkUser = async () => {
+
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      setIsLoggedIn(!!session);
+
+    };
+
+    checkUser();
+
+  }, []);
 
   const challenges = [
     {
@@ -79,7 +101,7 @@ export default function WhyReedo() {
                 making everyday services simple, trustworthy, and accessible
                 using modern technology and AI-powered support.
               </p>
-
+{!isLoggedIn && (
               <div className="mt-10">
                 <Button
                   onClick={() => navigate('/signup')}
@@ -88,6 +110,7 @@ export default function WhyReedo() {
                   Join Early Access
                 </Button>
               </div>
+              )}
             </div>
 
             {/* RIGHT IMAGE */}
@@ -261,9 +284,12 @@ export default function WhyReedo() {
             and designed for modern life in Poland.
           </p>
 
-          <div className="mt-10">
-            <Button
-              onClick={() => navigate('/signup')}
+       {!isLoggedIn && (
+
+<div className="mt-10">
+
+  <Button
+    onClick={() => navigate('/signup')}
             
              className="h-14 px-8 text-base font-semibold rounded-xl bg-white hover:bg-grey text-black shadow-[0_10px_25px_rgba(91,61,245,0.3)] transition-all duration-200 hover:-translate-y-[1px]"
 
@@ -271,6 +297,7 @@ export default function WhyReedo() {
               Get Started with Reedo
             </Button>
           </div>
+          )}
         </div>
       </section>
 
