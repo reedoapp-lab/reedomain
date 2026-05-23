@@ -98,41 +98,50 @@ export default function CustomerProfilePage() {
   }, []);
 
   // UPDATE PROFILE
-  const handleUpdate =
-    async () => {
+const handleUpdate = async () => {
 
-      if (!profile) return;
+  if (!profile) return;
 
-      setSaving(true);
+  setSaving(true);
 
-      const { error } =
-        await supabase
-          .from('profiles')
-          .update({
-            full_name:
-              profile.full_name,
+  // UPDATE SUPABASE PROFILE
+  const { error } =
+    await supabase
+      .from('profiles')
+      .update({
 
-            phone:
-              profile.phone,
+        full_name:
+          profile.full_name,
 
-            address:
-              profile.address,
-          })
-          .eq('id', profile.id);
+        phone:
+          profile.phone,
 
-      setSaving(false);
+        address:
+          profile.address,
 
-      if (!error) {
+      })
+      .eq('id', profile.id);
 
-        alert(
-          'Profile updated successfully.'
-        );
+  // ALSO UPDATE AUTH STORE
+  if (!error) {
 
-      } else {
+    setProfile({
+      ...profile,
+    });
 
-        alert(error.message);
-      }
-    };
+    alert(
+      'Profile updated successfully.'
+    );
+
+  } else {
+
+    alert(error.message);
+
+  }
+
+  setSaving(false);
+
+};
 
   // PROFILE IMAGE
   const handleImageUpload =

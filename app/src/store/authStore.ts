@@ -1,50 +1,46 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import type {
-  User,
-  LoginCredentials,
-  SignupData,
-} from '@/types';
-
 import { supabase } from '@/lib/supabase';
 
 interface AuthState {
-  user: User | null;
+  user: any;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
 
-  // ACTIONS
-  login: (
-    credentials: LoginCredentials
-  ) => Promise<boolean>;
+  login: (data: {
+    email: string;
+    password: string;
+  }) => Promise<boolean>;
 
-  signup: (
-    data: SignupData
-  ) => Promise<boolean>;
+  signup: (data: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    password: string;
+  }) => Promise<boolean>;
 
   googleSignIn: () => Promise<void>;
 
   logout: () => Promise<void>;
-
-  updateUser: (
-    user: Partial<User>
-  ) => void;
-
-  clearError: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
+
       user: null,
       isAuthenticated: false,
       isLoading: false,
       error: null,
 
       // LOGIN
-      login: async (credentials) => {
+      login: async ({
+        email,
+        password,
+      }) => {
 
         set({
           isLoading: true,
@@ -55,76 +51,46 @@ export const useAuthStore = create<AuthState>()(
           data,
           error,
         } = await supabase.auth.signInWithPassword({
-          email: credentials.email,
-          password: credentials.password,
+
+          email,
+          password,
+
         });
 
-        if (error || !data.user) {
+        if (error) {
 
           set({
             isLoading: false,
-            error:
-              error?.message ||
-              'Login failed',
+            error: error.message,
           });
 
           return false;
         }
 
-        const user: User = {
-          id: data.user.id,
-          email: data.user.email || '',
-          firstName:
-            data.user.user_metadata?.first_name || '',
-          lastName:
-            data.user.user_metadata?.last_name || '',
-          role: 'customer',
-          phone:
-            data.user.user_metadata?.phone || '',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        };
-
         set({
-          user,
+
+          user: data.user,
+
           isAuthenticated: true,
+
           isLoading: false,
+
           error: null,
+
         });
 
         return true;
-      },
-
-      // GOOGLE SIGN IN
-      googleSignIn: async () => {
-
-        const { error } =
-          await supabase.auth.signInWithOAuth({
-
-            provider: 'google',
-
-            options: {
-
-              queryParams: {
-                prompt: 'select_account',
-              },
-
-              redirectTo:
-                window.location.origin +
-                '/dashboard',
-
-            },
-
-          });
-
-        if (error) {
-          console.error(error.message);
-        }
 
       },
 
       // SIGNUP
-      signup: async (data) => {
+      signup: async ({
+        firstName,
+        lastName,
+        email,
+        phone,
+        password,
+      }) => {
 
         set({
           isLoading: true,
@@ -132,26 +98,20 @@ export const useAuthStore = create<AuthState>()(
         });
 
         const {
-          data: authData,
+          data,
           error,
         } = await supabase.auth.signUp({
 
-          email: data.email,
-
-          password: data.password,
+          email,
+          password,
 
           options: {
 
             data: {
 
-              first_name:
-                data.firstName,
-
-              last_name:
-                data.lastName,
-
-              phone:
-                data.phone,
+              first_name: firstName,
+              last_name: lastName,
+              phone,
 
             },
 
@@ -159,10 +119,7 @@ export const useAuthStore = create<AuthState>()(
 
         });
 
-        if (
-          error ||
-          !authData.user
-        ) {
+        if (error || !data.user) {
 
           set({
             isLoading: false,
@@ -175,61 +132,41 @@ export const useAuthStore = create<AuthState>()(
         }
 
         // CREATE PROFILE
-        await supabase
-          .from('profiles')
-          .upsert({
+        const { error: profileError } =
+          await supabase
+            .from('profiles')
+            .insert({
 
-            id:
-              authData.user.id,
+              id: data.user.id,
 
-            email:
-              data.email,
+              email,
 
-            full_name:
-              `${data.firstName} ${data.lastName}`,
+              full_name:
+                `${firstName} ${lastName}`,
 
-            phone:
-              data.phone,
+              phone,
 
-            address: '',
+              role: 'customer',
 
-            role: 'customer',
+              address: '',
 
-            complaint_history: [],
+              avatar_url: '',
 
-          });
+              complaint_history: [],
 
-        const newUser: User = {
+            });
 
-          id:
-            authData.user.id,
+        if (profileError) {
 
-          email:
-            data.email,
+          console.error(
+            profileError.message
+          );
 
-          firstName:
-            data.firstName,
-
-          lastName:
-            data.lastName,
-
-          role: 'customer',
-
-          phone:
-            data.phone,
-
-          createdAt:
-            new Date(),
-
-          updatedAt:
-            new Date(),
-
-        };
+        }
 
         set({
 
-          user:
-            newUser,
+          user: data.user,
 
           isAuthenticated: true,
 
@@ -240,6 +177,30 @@ export const useAuthStore = create<AuthState>()(
         });
 
         return true;
+
+      },
+
+      // GOOGLE LOGIN
+      googleSignIn: async () => {
+
+        await supabase.auth.signInWithOAuth({
+
+          provider: 'google',
+
+          options: {
+
+            queryParams: {
+              prompt: 'select_account',
+            },
+
+            redirectTo:
+              window.location.origin +
+              '/dashboard',
+
+          },
+
+        });
+
       },
 
       // LOGOUT
@@ -252,8 +213,11 @@ export const useAuthStore = create<AuthState>()(
         sessionStorage.clear();
 
         set({
+
           user: null,
+
           isAuthenticated: false,
+
         });
 
         window.location.href =
@@ -261,113 +225,12 @@ export const useAuthStore = create<AuthState>()(
 
       },
 
-      // UPDATE USER
-      updateUser: (
-        userData
-      ) => {
-
-        const {
-          user,
-        } = get();
-
-        if (user) {
-
-          set({
-
-            user: {
-
-              ...user,
-
-              ...userData,
-
-              updatedAt:
-                new Date(),
-
-            },
-
-          });
-
-        }
-
-      },
-
-      // CLEAR ERROR
-      clearError: () => {
-
-        set({
-          error: null,
-        });
-
-      },
-
     }),
 
     {
       name: 'auth-storage',
-
-      partialize: (state) => ({
-
-        user:
-          state.user,
-
-        isAuthenticated:
-          state.isAuthenticated,
-
-      }),
-
     }
 
   )
-
-);
-
-// AUTH STATE LISTENER
-supabase.auth.onAuthStateChange(
-  async (
-    event,
-    session
-  ) => {
-
-    if (
-      event === 'SIGNED_IN' &&
-      session?.user
-    ) {
-
-      const user =
-        session.user;
-
-      await supabase
-        .from('profiles')
-        .upsert({
-
-          id:
-            user.id,
-
-          email:
-            user.email,
-
-          full_name:
-            user.user_metadata
-              ?.full_name ||
-
-            `${user.user_metadata?.first_name || ''}
-             ${user.user_metadata?.last_name || ''}`,
-
-          avatar_url:
-            user.user_metadata
-              ?.avatar_url || '',
-
-          phone:
-            user.user_metadata
-              ?.phone || '',
-
-          role:
-            'customer',
-
-        });
-
-    }
-
-  }
 
 );
