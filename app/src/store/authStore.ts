@@ -12,7 +12,6 @@ import { supabase } from '@/lib/supabase';
 interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
-  googleSignIn: () => Promise<void>,
   isLoading: boolean;
   error: string | null;
 
@@ -24,6 +23,8 @@ interface AuthState {
   signup: (
     data: SignupData
   ) => Promise<boolean>;
+
+  googleSignIn: () => Promise<void>;
 
   logout: () => Promise<void>;
 
@@ -44,18 +45,22 @@ export const useAuthStore = create<AuthState>()(
 
       // LOGIN
       login: async (credentials) => {
+
         set({
           isLoading: true,
           error: null,
         });
 
-        const { data, error } =
-          await supabase.auth.signInWithPassword({
-            email: credentials.email,
-            password: credentials.password,
-          });
+        const {
+          data,
+          error,
+        } = await supabase.auth.signInWithPassword({
+          email: credentials.email,
+          password: credentials.password,
+        });
 
         if (error || !data.user) {
+
           set({
             isLoading: false,
             error:
@@ -69,10 +74,13 @@ export const useAuthStore = create<AuthState>()(
         const user: User = {
           id: data.user.id,
           email: data.user.email || '',
-          firstName: '',
-          lastName: '',
+          firstName:
+            data.user.user_metadata?.first_name || '',
+          lastName:
+            data.user.user_metadata?.last_name || '',
           role: 'customer',
-          phone: '',
+          phone:
+            data.user.user_metadata?.phone || '',
           createdAt: new Date(),
           updatedAt: new Date(),
         };
@@ -86,28 +94,38 @@ export const useAuthStore = create<AuthState>()(
 
         return true;
       },
-    
-googleSignIn: async () => {
 
-  const { error } =
-    await supabase.auth.signInWithOAuth({
+      // GOOGLE SIGN IN
+      googleSignIn: async () => {
 
-      provider: 'google',
+        const { error } =
+          await supabase.auth.signInWithOAuth({
 
-      options: {
-        redirectTo:
-          window.location.origin +
-          '/auth/callback',
+            provider: 'google',
+
+            options: {
+
+              queryParams: {
+                prompt: 'select_account',
+              },
+
+              redirectTo:
+                window.location.origin +
+                '/dashboard',
+
+            },
+
+          });
+
+        if (error) {
+          console.error(error.message);
+        }
+
       },
-    });
 
-  if (error) {
-    console.error(error.message);
-  }
-
-},
       // SIGNUP
       signup: async (data) => {
+
         set({
           isLoading: true,
           error: null,
@@ -117,11 +135,35 @@ googleSignIn: async () => {
           data: authData,
           error,
         } = await supabase.auth.signUp({
+
           email: data.email,
+
           password: data.password,
+
+          options: {
+
+            data: {
+
+              first_name:
+                data.firstName,
+
+              last_name:
+                data.lastName,
+
+              phone:
+                data.phone,
+
+            },
+
+          },
+
         });
 
-        if (error || !authData.user) {
+        if (
+          error ||
+          !authData.user
+        ) {
+
           set({
             isLoading: false,
             error:
@@ -132,127 +174,200 @@ googleSignIn: async () => {
           return false;
         }
 
-        // SAVE PROFILE
+        // CREATE PROFILE
         await supabase
           .from('profiles')
-          .insert({
-            id: authData.user.id,
-            full_name: `${data.firstName} ${data.lastName}`,
-            phone: data.phone,
+          .upsert({
+
+            id:
+              authData.user.id,
+
+            email:
+              data.email,
+
+            full_name:
+              `${data.firstName} ${data.lastName}`,
+
+            phone:
+              data.phone,
+
             address: '',
+
             role: 'customer',
+
             complaint_history: [],
+
           });
 
         const newUser: User = {
-          id: authData.user.id,
-          email: data.email,
-          firstName: data.firstName,
-          lastName: data.lastName,
+
+          id:
+            authData.user.id,
+
+          email:
+            data.email,
+
+          firstName:
+            data.firstName,
+
+          lastName:
+            data.lastName,
+
           role: 'customer',
-          phone: data.phone,
-          createdAt: new Date(),
-          updatedAt: new Date(),
+
+          phone:
+            data.phone,
+
+          createdAt:
+            new Date(),
+
+          updatedAt:
+            new Date(),
+
         };
 
         set({
-          user: newUser,
+
+          user:
+            newUser,
+
           isAuthenticated: true,
+
           isLoading: false,
+
           error: null,
+
         });
 
         return true;
       },
 
       // LOGOUT
-logout: async () => {
+      logout: async () => {
 
-  // SIGN OUT FROM SUPABASE
-  const { error } =
-    await supabase.auth.signOut();
+        await supabase.auth.signOut();
 
-  if (error) {
+        localStorage.clear();
 
-    console.error(error.message);
-    return;
+        sessionStorage.clear();
 
-  }
+        set({
+          user: null,
+          isAuthenticated: false,
+        });
 
-  // CLEAR LOCAL STATE
-  set({
-    user: null,
-  });
+        window.location.href =
+          '/login';
 
-  // FORCE REDIRECT
-  window.location.href = '/login';
-
-},
+      },
 
       // UPDATE USER
-      updateUser: (userData) => {
-        const { user } = get();
+      updateUser: (
+        userData
+      ) => {
+
+        const {
+          user,
+        } = get();
 
         if (user) {
+
           set({
+
             user: {
+
               ...user,
+
               ...userData,
-              updatedAt: new Date(),
+
+              updatedAt:
+                new Date(),
+
             },
+
           });
+
         }
+
       },
 
       // CLEAR ERROR
       clearError: () => {
+
         set({
           error: null,
         });
+
       },
+
     }),
+
     {
       name: 'auth-storage',
 
       partialize: (state) => ({
-        user: state.user,
+
+        user:
+          state.user,
+
         isAuthenticated:
           state.isAuthenticated,
+
       }),
+
     }
+
   )
+
 );
 
+// AUTH STATE LISTENER
 supabase.auth.onAuthStateChange(
-  async (event, session) => {
+  async (
+    event,
+    session
+  ) => {
 
     if (
       event === 'SIGNED_IN' &&
       session?.user
     ) {
 
-      const user = session.user;
+      const user =
+        session.user;
 
       await supabase
         .from('profiles')
         .upsert({
-          id: user.id,
 
-          email: user.email,
+          id:
+            user.id,
+
+          email:
+            user.email,
 
           full_name:
             user.user_metadata
-              ?.full_name || '',
+              ?.full_name ||
+
+            `${user.user_metadata?.first_name || ''}
+             ${user.user_metadata?.last_name || ''}`,
 
           avatar_url:
             user.user_metadata
               ?.avatar_url || '',
 
-          phone: '',
+          phone:
+            user.user_metadata
+              ?.phone || '',
 
-          role: 'customer',
+          role:
+            'customer',
+
         });
 
     }
+
   }
+
 );
